@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
       1, // notificationId
       2 // notification request code
     ));
-    OkHiConfig config = new OkHiConfig.Builder().withUsageTypes(new OkHiUsageType[]{OkHiUsageType.physicalVerification}).build();
+    OkHiConfig config = new OkHiConfig.Builder().withUsageTypes(new OkHiUsageType[]{OkHiUsageType.digitalVerification, OkHiUsageType.physicalVerification}).build();
     okVerify = new OkVerify.Builder(this).build();
     okCollect = new OkCollect.Builder(this).withConfig(config).withTheme(okHiTheme).build();
   }
