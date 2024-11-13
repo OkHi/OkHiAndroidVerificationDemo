@@ -8,12 +8,27 @@
   tools:context=".MainActivity">
 
   <Button
-    android:id="@+id/btnVerifyAddress"
-    android:layout_width="wrap_content"
+    android:id="@+id/btnCreateAddress"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:text="Verify an address"
+    android:layout_marginStart="15dp"
+    android:layout_marginEnd="15dp"
+    android:text="Create Address"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
+
+  <Button
+    android:id="@+id/btnVerifySavedAddress"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="15dp"
+    android:layout_marginTop="35dp"
+    android:layout_marginEnd="15dp"
+    android:text="Verify Saved Address"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/btnCreateAddress" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
