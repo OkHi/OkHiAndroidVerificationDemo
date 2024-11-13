@@ -24,6 +24,8 @@ import io.okhi.android_okcollect.utilities.OkHiConfig;
 import io.okhi.android_okverify.OkVerify;
 import io.okhi.android_okverify.interfaces.OkVerifyCallback;
 import io.okhi.android_okverify.models.OkHiNotification;
+import io.okhi.okhiandroidverificationdemo.utils.DB;
+import io.okhi.okhiandroidverificationdemo.utils.DBAddressResponse;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,16 +52,40 @@ public class MainActivity extends AppCompatActivity {
       1, // notificationId
       2 // notification request code
     ));
-    OkHiConfig config = new OkHiConfig.Builder().withUsageTypes(new OkHiUsageType[]{OkHiUsageType.digitalVerification}).build();
+    OkHiConfig config = new OkHiConfig.Builder().withUsageTypes(new OkHiUsageType[]{OkHiUsageType.addressBook}).build();
     okVerify = new OkVerify.Builder(this).build();
     okCollect = new OkCollect.Builder(this).withConfig(config).withTheme(okHiTheme).build();
   }
 
-  private void onVerifyAddressClick() {
+  private void onCreateAddressClick() {
     okCollect.launch(createOkHiUser(), new OkCollectCallback<OkHiUser, OkHiLocation>() {
       @Override
       public void onSuccess(OkHiUser user, OkHiLocation location) {
+        DB.saveAddress(user, location);
         startAddressVerification(user, location);
+      }
+
+      @Override
+      public void onClose() {
+        showMessage("User closed.");
+      }
+
+      @Override
+      public void onError(OkHiException e) {
+        showMessage(e.getCode() + ":" + e.getMessage());
+      }
+    });
+  }
+
+  private void onVerifySavedAddressClick() {
+    DBAddressResponse savedAddress = DB.fetchAddress();
+    if (savedAddress == null) return; // no address previously created
+    OkHiConfig config = new OkHiConfig.Builder().withUsageTypes(new OkHiUsageType[]{OkHiUsageType.digitalVerification}).build();
+    okCollect = new OkCollect.Builder(this).withConfig(config).withTheme(okHiTheme).build();
+    okCollect.launch(savedAddress.user, savedAddress.location, new OkCollectCallback<OkHiUser, OkHiLocation>() {
+      @Override
+      public void onSuccess(OkHiUser okHiUser, OkHiLocation location) {
+        startAddressVerification(okHiUser, location);
       }
 
       @Override
@@ -114,11 +140,18 @@ public class MainActivity extends AppCompatActivity {
       v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
       return insets;
     });
-    Button btnVerifyAddress = findViewById(R.id.btnVerifyAddress);
-    btnVerifyAddress.setOnClickListener(new View.OnClickListener() {
+    Button btnVerifySavedAddress = findViewById(R.id.btnVerifySavedAddress);
+    Button btnCreateAddress = findViewById(R.id.btnCreateAddress);
+    btnCreateAddress.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        onVerifyAddressClick();
+        onCreateAddressClick();
+      }
+    });
+    btnVerifySavedAddress.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        onVerifySavedAddressClick();
       }
     });
   }
