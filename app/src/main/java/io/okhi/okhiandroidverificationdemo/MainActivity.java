@@ -15,7 +15,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import io.okhi.android_core.models.OkHiException;
 import io.okhi.android_core.models.OkHiLocation;
-import io.okhi.android_core.models.OkHiUsageType;
 import io.okhi.android_core.models.OkHiUser;
 import io.okhi.android_okcollect.OkCollect;
 import io.okhi.android_okcollect.utilities.OkHiTheme;
@@ -50,9 +49,13 @@ public class MainActivity extends AppCompatActivity {
       1, // notificationId
       2 // notification request code
     ));
-    OkHiConfig config = new OkHiConfig.Builder().withUsageTypes(new OkHiUsageType[]{OkHiUsageType.digitalVerification}).build();
-    okVerify = new OkVerify.Builder(this).build();
-    okCollect = new OkCollect.Builder(this).withConfig(config).withTheme(okHiTheme).build();
+    OkHiConfig config = new OkHiConfig.Builder().build();
+    try {
+      okVerify = new OkVerify.Builder(this).build();
+      okCollect = new OkCollect.Builder(this).withConfig(config).withTheme(okHiTheme).build();
+    } catch (OkHiException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private void onVerifyAddressClick() {
@@ -89,11 +92,10 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private OkHiUser createOkHiUser() {
-    return new OkHiUser.Builder("+254...")
-      .withFirstName("Jane")
-      .withLastName("Doe")
-      .withEmail("jane@okhi.co")
-      .withAppUserId("abcd1234")
+    return new OkHiUser.Builder("+254700110590")
+      .withFirstName("Julius")
+      .withLastName("Kiano")
+      .withEmail("kiano@okhi.co")
       .build();
   }
 
