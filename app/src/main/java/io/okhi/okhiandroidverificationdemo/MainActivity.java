@@ -13,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import io.okhi.android_core.models.OkCollectSuccessResponse;
 import io.okhi.android_core.models.OkHiException;
 import io.okhi.android_core.models.OkHiLocation;
 import io.okhi.android_core.models.OkHiUsageType;
@@ -56,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void onVerifyAddressClick() {
-    okCollect.launch(createOkHiUser(), new OkCollectCallback<OkHiUser, OkHiLocation>() {
+    okCollect.launch(createOkHiUser(), new OkCollectCallback<OkCollectSuccessResponse>() {
       @Override
-      public void onSuccess(OkHiUser user, OkHiLocation location) {
-        startAddressVerification(user, location);
+      public void onSuccess(OkCollectSuccessResponse response) {
+        startAddressVerification(response);
       }
 
       @Override
@@ -74,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  private void startAddressVerification(OkHiUser user, OkHiLocation location) {
-    okVerify.start(user, location, new OkVerifyCallback<String>() {
+  private void startAddressVerification(OkCollectSuccessResponse response) {
+    okVerify.start(response, new OkVerifyCallback<String>() {
       @Override
       public void onSuccess(String locationId) {
         showMessage("Successfully started verification for: " + locationId);
